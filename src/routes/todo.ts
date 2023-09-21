@@ -2,6 +2,9 @@ import { Router } from "express";
 import todo from "../models/todomodels";
 
 const router = Router();
+type bodyPost = { text: "string" };
+type bodyDelete = { id: "string" };
+type bodyUpdate = { id: "string"; text: "string" };
 
 let arr: todo[] = [];
 
@@ -11,18 +14,20 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/post", (req, res, next) => {
+  let body = req.body as bodyPost;
   arr.push({
     id: Math.floor(Math.random() * 100).toString(),
-    text: req.body.text,
+    text: body.text,
   });
   console.log(req.body);
   res.json({ todos: arr });
 });
 
 router.delete("/delete", (req, res, next) => {
+  let body = req.body as bodyDelete;
   let isPresent: boolean = false;
   const newArr: todo[] = [];
-  const id = req.body.id;
+  const id = body.id;
   arr.forEach((ele) => {
     if (ele.id !== id) {
       newArr.push(ele);
@@ -40,12 +45,13 @@ router.delete("/delete", (req, res, next) => {
 });
 
 router.patch("/update", (req, res, next) => {
-  let id = req.body.id;
+  let body = req.body as bodyUpdate;
+  let id = body.id;
   let isPresent: boolean = false;
   arr.forEach((ele) => {
     if (ele.id === id) {
       isPresent = true;
-      ele.text = req.body.text;
+      ele.text = body.text;
     }
   });
   if (isPresent) {

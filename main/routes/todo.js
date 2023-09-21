@@ -8,17 +8,19 @@ router.get("/", (req, res, next) => {
     res.status(200).json({ todos: arr });
 });
 router.post("/post", (req, res, next) => {
+    let body = req.body;
     arr.push({
         id: Math.floor(Math.random() * 100).toString(),
-        text: req.body.text,
+        text: body.text,
     });
     console.log(req.body);
     res.json({ todos: arr });
 });
 router.delete("/delete", (req, res, next) => {
+    let body = req.body;
     let isPresent = false;
     const newArr = [];
-    const id = req.body.id;
+    const id = body.id;
     arr.forEach((ele) => {
         if (ele.id !== id) {
             newArr.push(ele);
@@ -37,12 +39,13 @@ router.delete("/delete", (req, res, next) => {
     }
 });
 router.patch("/update", (req, res, next) => {
-    let id = req.body.id;
+    let body = req.body;
+    let id = body.id;
     let isPresent = false;
     arr.forEach((ele) => {
         if (ele.id === id) {
             isPresent = true;
-            ele.text = req.body.text;
+            ele.text = body.text;
         }
     });
     if (isPresent) {
